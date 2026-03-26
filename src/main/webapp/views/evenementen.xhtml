@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                template="/templates/homepage.xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        <style>
+            .event-grid .ui-datagrid-content {
+                border: none;
+            }
+            .event-card {
+                margin: 10px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+            }
+            .event-card .ui-card-body {
+                padding: 1.5rem;
+                flex-grow: 1;
+                display: flex;
+                flex-direction: column;
+            }
+            .event-logo-container {
+                text-align: center;
+                margin-bottom: 15px;
+            }
+            .event-logo {
+                max-width: 100%;
+                max-height: 150px;
+                width: auto;
+                height: auto;
+                object-fit: contain;
+                border-radius: 8px;
+            }
+            .event-title {
+                font-size: 1.4rem;
+                color: #91a63d;
+                text-align: center;
+                margin-bottom: 10px;
+                font-weight: bold;
+            }
+            .event-description {
+                color: #555;
+                margin-bottom: 15px;
+                line-height: 1.6;
+            }
+            .event-address {
+                margin-bottom: 20px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            .event-address a {
+                color: #555;
+                font-style: italic;
+                text-decoration: none;
+                transition: color 0.3s;
+            }
+            .event-address a:hover {
+                color: #91a63d;
+                text-decoration: underline;
+            }
+            .event-details-list {
+                list-style-type: none;
+                padding: 0;
+                margin: 0;
+                margin-bottom: 20px;
+            }
+            .event-details-list li {
+                margin-bottom: 5px;
+                padding-left: 20px;
+                position: relative;
+                color: #444;
+            }
+            .event-details-list li::before {
+                content: "✓";
+                color: #91a63d;
+                font-weight: bold;
+                position: absolute;
+                left: 0;
+            }
+            .event-footer {
+                margin-top: auto;
+                text-align: center;
+            }
+        </style>
+
+        <h1 style="text-align: center; color: #91a63d; margin-bottom: 30px;">Evenementen</h1>
+
+        <p:dataGrid var="event" value="#{evenementenBean.events}" columns="1" layout="grid"
+                    styleClass="event-grid"
+                    paginator="false" rows="10">
+
+            <p:card styleClass="event-card">
+                <div class="event-logo-container">
+                    <h:graphicImage library="images" name="logos/#{event.logo}" styleClass="event-logo" alt="#{event.title}"
+                                    rendered="#{not empty event.logo}" />
+                </div>
+
+                <div class="event-title">
+                    #{event.title}
+                </div>
+
+                <div class="event-description">
+                    #{event.description}
+                </div>
+
+                <ul class="event-details-list">
+                    <ui:repeat value="#{event.details}" var="detail">
+                        <li>#{detail}</li>
+                    </ui:repeat>
+                </ul>
+
+                <div class="event-address" rendered="#{not empty event.address}">
+                    <i class="pi pi-map-marker" style="color: #91a63d; font-size: 1.2rem;"></i>
+                    <a href="https://www.google.com/maps/search/?api=1&amp;query=#{event.address}" target="_blank">
+                        #{event.address}
+                    </a>
+                </div>
+
+                <div class="event-footer">
+                    <p:button value="Meer info" href="#{event.url}" target="_blank"
+                              icon="pi pi-external-link" styleClass="ui-button-outlined"
+                              rendered="#{not empty event.url}" />
+                </div>
+            </p:card>
+
+        </p:dataGrid>
+    </ui:define>
+
+</ui:composition>
+

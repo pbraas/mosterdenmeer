@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                template="/templates/homepage.xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+
+    <ui:define name="content">
+        <script type="text/javascript">
+            function onTurnstileSuccess(token) {
+                var captchaField = document.getElementById('contactForm:captcha');
+                if (captchaField) {
+                    captchaField.value = token;
+                }
+            }
+
+            function onTurnstileExpired() {
+                var captchaField = document.getElementById('contactForm:captcha');
+                if (captchaField) {
+                    captchaField.value = '';
+                }
+            }
+        </script>
+        <style>
+            .contact-card {
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+            .field-container {
+                margin-bottom: 20px;
+            }
+            .ui-inputtext, .ui-inputtextarea {
+                width: 100%;
+            }
+            .ui-message {
+                margin-top: 5px;
+                width: 100%;
+            }
+        </style>
+
+        <div class="contact-card">
+            <p:card>
+                <f:facet name="title">
+                    Neem contact met ons op
+                </f:facet>
+                <f:facet name="subtitle">
+                    Heeft u vragen of opmerkingen? Stuur ons een bericht!
+                </f:facet>
+
+                <h:form id="contactForm">
+                    <p:growl id="growl" showDetail="true" sticky="false" life="5000" />
+
+                    <div class="ui-fluid">
+                        <div class="field-container">
+                            <p:outputLabel for="name" value="Naam" />
+                            <div class="ui-input-icon-left">
+                                <i class="pi pi-user" />
+                                <p:inputText id="name" value="#{contactBean.name}" required="true"
+                                             requiredMessage="Naam is verplicht" placeholder="Uw naam" maxlength="80" />
+                            </div>
+                            <p:message for="name" display="text" />
+                        </div>
+
+                        <div class="field-container">
+                            <p:outputLabel for="email" value="Email" />
+                            <div class="ui-input-icon-left">
+                                <i class="pi pi-envelope" />
+                                <p:inputText id="email" value="#{contactBean.email}" required="true"
+                                             requiredMessage="Email is verplicht" placeholder="Uw emailadres"
+                                             validatorMessage="Ongeldig emailadres" maxlength="120">
+                                    <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+                                </p:inputText>
+                            </div>
+                            <p:message for="email" display="text" />
+                        </div>
+
+                        <div class="field-container">
+                            <p:outputLabel for="subject" value="Onderwerp" />
+                            <div class="ui-input-icon-left">
+                                <i class="pi pi-tag" />
+                                <p:inputText id="subject" value="#{contactBean.subject}" required="true"
+                                             requiredMessage="Onderwerp is verplicht" placeholder="Onderwerp van uw bericht" maxlength="140" />
+                            </div>
+                            <p:message for="subject" display="text" />
+                        </div>
+
+                        <div class="field-container">
+                            <p:outputLabel for="message" value="Bericht" />
+                            <p:inputTextarea id="message" value="#{contactBean.message}" required="true"
+                                             requiredMessage="Bericht is verplicht" rows="6"
+                                             placeholder="Typ hier uw bericht..."
+                                             counter="display" maxlength="1000"
+                                             counterTemplate="{0} tekens over." autoResize="false" />
+                            <h:outputText id="display" class="block" />
+                            <p:message for="message" display="text" />
+                        </div>
+
+                        <h:panelGroup style="display:none;" layout="block" aria-hidden="true">
+                            <p:outputLabel for="website" value="Laat dit veld leeg" />
+                            <p:inputText id="website" value="#{contactBean.website}" autocomplete="off" tabindex="-1" />
+                        </h:panelGroup>
+
+                        <div class="field-container">
+                            <p:outputLabel for="captcha" value="Beveiligingscontrole" />
+                            <div class="cf-turnstile" data-sitekey="#{contactBean.turnstileSiteKey}"
+                                 data-callback="onTurnstileSuccess" data-expired-callback="onTurnstileExpired"></div>
+                            <h:inputHidden id="captcha" value="#{contactBean.captchaToken}" />
+                            <h:panelGroup rendered="#{empty contactBean.turnstileSiteKey}">
+                                <small style="color:#b00020;">Captcha-sitekey ontbreekt op de server.</small>
+                            </h:panelGroup>
+                            <p:message for="captcha" display="text" />
+                        </div>
+
+                        <div class="field-container">
+                            <p:commandButton value="Verstuur Bericht" action="#{contactBean.send}"
+                                             ajax="false" icon="pi pi-send" styleClass="ui-button-success" />
+                        </div>
+                    </div>
+                </h:form>
+            </p:card>
+        </div>
+    </ui:define>
+
+</ui:composition>
+

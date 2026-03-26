@@ -1,0 +1,314 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Mosterd en Meer</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <!-- Cloudflare Turnstile — only activates on pages that contain a .cf-turnstile div -->
+        <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async="async" defer="defer">/* */</script>
+
+        <!-- Google Fonts: Noto Sans -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet" />
+
+        <style>
+            /* <![CDATA[ */
+            html {
+                scroll-behavior: smooth;
+            }
+            body {
+                font-family: 'Noto Sans', sans-serif;
+                background-color: #f7f7f7;
+                color: #2e4a18 !important;
+                margin: 0;
+                padding: 0;
+            }
+
+            .ui-widget, .ui-widget .ui-widget {
+                font-family: 'Noto Sans', sans-serif !important;
+                color: #2e4a18 !important;
+            }
+
+            /* Main Header Bar */
+            .main-header {
+                background-color: #91a63d;
+                border-bottom: 1rem solid #7a8c33;
+                padding: 0.5rem 20px;
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+                position: relative;
+                height: 70px;
+                z-index: 1000;
+            }
+
+            /* Logo Styling */
+            .header-logo img {
+                height: 130px;
+                width: auto;
+                position: absolute;
+                top: 10px;
+                left: 20px;
+                z-index: 1001;
+                background-color: #fff;
+                border-radius: 5%;
+                padding: 5px;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            }
+
+            /* Desktop Menu Styling */
+            .desktop-menu-container {
+                flex-grow: 1;
+                text-align: right;
+                margin-left: 160px;
+            }
+
+            .desktop-menu .ui-menubar {
+                background: transparent !important;
+                border: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            .desktop-menu .ui-menu-list {
+                float: right !important;
+            }
+
+            .desktop-menu .ui-menuitem-link {
+                color: #fff !important;
+                font-weight: bold;
+                font-size: 1.1rem;
+                transition: background-color 0.3s ease;
+            }
+
+            .desktop-menu .ui-menuitem-link:hover,
+            .desktop-menu .ui-menuitem-link.ui-state-hover {
+                background-color: rgba(255,255,255,0.2) !important;
+                border-radius: 4px;
+                color: #fff !important;
+                text-decoration: none !important;
+            }
+
+            .desktop-menu .ui-menuitem-link.ui-state-hover .ui-menuitem-text {
+                color: #fff !important;
+            }
+
+            /* Mobile Menu Icon */
+            .mobile-menu-icon {
+                display: none;
+                font-size: 30px;
+                cursor: pointer;
+                color: white;
+            }
+
+            /* Content and Footer */
+            .content-container {
+                padding: 20px;
+                max-width: 1200px;
+                margin: 0 auto;
+                font-size: 1.2rem;
+                line-height: 1.6;
+                margin-top: 40px;
+            }
+            .footer {
+                margin-top: 50px;
+                padding: 20px;
+                background-color: #f9f9f9;
+                border-top: 1px solid #ddd;
+                text-align: center;
+            }
+
+            /* Image wrapping styles */
+            .content-with-image .inline-image {
+                float: right;
+                margin: 0 0 15px 20px;
+                max-width: 40%;
+                height: auto;
+                border-radius: 8px;
+            }
+            .content-with-image .inline-image-left {
+                float: left;
+                margin: 0 20px 15px 0;
+                max-width: 40%;
+                height: auto;
+                border-radius: 8px;
+            }
+            .bottom-image-container {
+                clear: both;
+                text-align: center;
+                padding-top: 20px;
+            }
+            .bottom-image {
+                max-width: 100%;
+                height: auto;
+                border-radius: 8px;
+            }
+
+            .ui-widget {
+                font-family: 'Noto Sans', sans-serif !important;
+                color: #2e4a18 !important;
+            }
+
+            /* Mobile Overlay Menu Styles */
+            .overlay {
+                height: 100%;
+                width: 0;
+                position: fixed;
+                z-index: 9999;
+                top: 0;
+                left: 0;
+                background-color: #91a63d;
+                overflow-x: hidden;
+                transition: 0.5s;
+            }
+
+            .overlay-content {
+                position: relative;
+                top: 25%;
+                width: 100%;
+                text-align: center;
+                margin-top: 30px;
+            }
+
+            .overlay a {
+                padding: 8px;
+                text-decoration: none;
+                font-size: 36px;
+                color: #ffffff !important;
+                display: block;
+                transition: 0.3s;
+                font-family: 'Noto Sans', sans-serif;
+            }
+
+            .overlay a:hover, .overlay a:focus {
+                background-color: rgba(0,0,0,0.1);
+            }
+
+            .overlay .closebtn {
+                position: absolute;
+                top: 20px;
+                right: 45px;
+                font-size: 60px;
+                color: #ffffff !important;
+            }
+
+            /* Responsive Logic */
+            @media (max-width: 900px) {
+                .desktop-menu-container {
+                    display: none;
+                }
+                .mobile-menu-icon {
+                    display: block;
+                }
+                .content-container {
+                    padding: 15px;
+                    font-size: 1.1rem;
+                    margin-top: 60px;
+                }
+                .content-with-image .inline-image,
+                .content-with-image .inline-image-left {
+                    float: none;
+                    display: block;
+                    max-width: 100%;
+                    margin: 0 auto 20px auto;
+                }
+                .header-logo img {
+                    height: 100px;
+                    left: 10px;
+                }
+                .main-header {
+                    justify-content: flex-end;
+                }
+            }
+
+            @media screen and (max-height: 450px) {
+                .overlay a {font-size: 20px}
+                .overlay .closebtn {
+                    font-size: 40px;
+                    top: 15px;
+                    right: 35px;
+                }
+            }
+            /* ]]> */
+        </style>
+        <script>
+            function openNav() {
+                document.getElementById("myNav").style.width = "100%";
+            }
+
+            function closeNav() {
+                document.getElementById("myNav").style.width = "0%";
+            }
+        </script>
+    </h:head>
+    <h:body>
+
+        <!-- Main Header Bar -->
+        <div class="main-header">
+            <!-- Logo on the Left (Absolute) -->
+            <div class="header-logo">
+                <h:link outcome="/views/home">
+                    <h:graphicImage library="images" name="logo_klein.jpg" alt="Mosterd en Meer Logo" />
+                </h:link>
+            </div>
+
+            <!-- Desktop Menu on the Right -->
+            <div class="desktop-menu-container">
+                <h:form class="desktop-menu">
+                    <p:menubar>
+                        <p:menuitem value="Home" outcome="/views/home" />
+                        <p:menuitem value="Over ons" outcome="/views/overons" />
+                        <p:menuitem value="Waar te koop?" outcome="/views/waartekoop" />
+                        <p:menuitem value="Evenementen" outcome="/views/evenementen" />
+                        <p:menuitem value="Recepten" outcome="/views/recepten" />
+                        <p:menuitem value="Contact" outcome="/views/contact" />
+                    </p:menubar>
+                </h:form>
+            </div>
+
+            <!-- Mobile Menu Icon (Hamburger) -->
+            <div class="mobile-menu-icon" onclick="openNav()">
+                &#9776;
+            </div>
+        </div>
+
+        <!-- Mobile Overlay Menu -->
+        <div id="myNav" class="overlay">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <div class="overlay-content">
+                <h:link value="Home" outcome="/views/home" onclick="closeNav()" />
+                <h:link value="Over ons" outcome="/views/overons" onclick="closeNav()" />
+                <h:link value="Waar te koop?" outcome="/views/waartekoop" onclick="closeNav()" />
+                <h:link value="Evenementen" outcome="/views/evenementen" onclick="closeNav()" />
+                <h:link value="Recepten" outcome="/views/recepten" onclick="closeNav()" />
+                <h:link value="Contact" outcome="/views/contact" onclick="closeNav()" />
+            </div>
+        </div>
+
+        <div class="content-container">
+            <ui:insert name="content">
+                Default Content
+            </ui:insert>
+        </div>
+
+        <div class="footer" id="contact-footer">
+            <h3>Contact</h3>
+            <p>
+                Mosterd &amp; Meer<br/>
+                Polderboom 7<br/>
+                3267 BH Goudswaard
+            </p>
+            <p>
+                06-45552594<br/>
+                info@mosterdenmeer.nl<br/>
+                www.mosterdenmeer.nl
+            </p>
+        </div>
+    </h:body>
+</html>
+

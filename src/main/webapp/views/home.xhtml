@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                template="/templates/homepage.xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        <style>
+            .home-header {
+                text-align: center;
+                color: #91a63d;
+                margin-bottom: 10px;
+            }
+            .home-intro {
+                text-align: center;
+                font-size: 1.2rem;
+                margin-bottom: 30px;
+                font-weight: bold;
+            }
+            .home-columns {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 40px;
+                margin-bottom: 30px;
+                text-align: left;
+                line-height: 1.8;
+            }
+            .home-column {
+                flex: 1;
+                min-width: 300px;
+            }
+            .home-footer-text {
+                text-align: center;
+                font-style: italic;
+                margin-top: 20px;
+                color: #555;
+            }
+
+            /* Carousel Styling */
+            .product-item .product-item-content {
+                border: 1px solid var(--surface-d);
+                border-radius: 3px;
+                margin: .3rem;
+                text-align: center;
+                padding: 1rem;
+                height: 250px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: #fff;
+            }
+            .product-item .product-image {
+                max-width: 100%;
+                max-height: 100%;
+                width: auto;
+                height: auto;
+                object-fit: contain;
+                box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+                border-radius: 5px;
+            }
+
+            @media (max-width: 768px) {
+                .home-columns {
+                    flex-direction: column;
+                    gap: 20px;
+                }
+            }
+        </style>
+
+        <h1 class="home-header">Een lekkere mosterd, een chutney of een mayonaise?</h1>
+
+        <div class="home-intro">
+            De lekkerste streekproducten vind u bij Mosterd &amp; Meer.
+        </div>
+
+        <div class="home-columns">
+            <div class="home-column">
+                <p>De voortreffelijke smaak van onze producten komt doordat wij een groot aantal kruiden zelf kweken in onze moestuin. Daarnaast oogsten wij ook verse ingrediënten op verantwoorde wijze in natuurgebieden, zoals bramen, vlierbloesem en bessen, walnoten en een tal aan andere vruchten. Zo bent u verzekerd van de meest verse en lekkere producten.</p>
+            </div>
+            <div class="home-column">
+                <p>Mosterd &amp; Meer is gevestigd in Goudswaard, een gezellig dorp in het nationaal landschap de Hoeksche Waard. Wij maken op ambachtelijke wijze iedere dag weer de heerlijkste producten. Zo creëren wij een groot aantal heerlijke mosterdsoorten, een verscheidenheid aan jams, de lekkerste chutneys, sauzen en nog veel meer.</p>
+            </div>
+        </div>
+
+        <!-- Carousel Section -->
+        <div class="card">
+            <p:carousel value="#{homeBean.images}" var="image" circular="true" autoplayInterval="3000"
+                        numVisible="5" numScroll="1"
+                        responsiveOptions="#{homeBean.responsiveOptions}">
+                <div class="product-item">
+                    <div class="product-item-content">
+                        <h:graphicImage library="images" name="carousel/#{image}" styleClass="product-image" />
+                    </div>
+                </div>
+            </p:carousel>
+        </div>
+
+        <div class="home-footer-text">
+            Mosterd &amp; Meer staat voor kleinschalig, streekgebonden, respect voor milieu, mens en dier.
+        </div>
+    </ui:define>
+
+</ui:composition>
+
