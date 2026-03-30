@@ -20,18 +20,15 @@ public class TurnstileService {
 
     // Temporary test keys from Cloudflare docs. Safe for local troubleshooting only.
     // Set USE_JVM_OPTIONS=true once production JVM options are correct.
-    private static final String FALLBACK_SITE_KEY = "1x00000000000000000000AA";
-    private static final String FALLBACK_SECRET   = "1x0000000000000000000000000000000AA";
+    private static final String FALLBACK_SITE_KEY = "0x4AAAAAACvw5w5T0bTLMMux";
+    private static final String FALLBACK_SECRET   = "0x4AAAAAACvw5yp9szh8d4oSbeLG5UC8X1A";
 
     private final HttpClient httpClient = HttpClient.newHttpClient();
 
     public String getSiteKey() {
-        if (!USE_JVM_OPTIONS) {
-            return FALLBACK_SITE_KEY;
-        }
-        String value = System.getProperty("TURNSTILE_SITE_KEY", "").trim();
-        return value.isBlank() ? FALLBACK_SITE_KEY : value;
+        return FALLBACK_SITE_KEY;
     }
+
 
     public boolean isEnabled() {
         return !getSiteKey().isBlank() && !getSecret().isBlank();
@@ -71,12 +68,8 @@ public class TurnstileService {
     }
 
     private String getSecret() {
-        if (!USE_JVM_OPTIONS) {
             return FALLBACK_SECRET;
         }
-        String value = System.getProperty("TURNSTILE_SECRET", "").trim();
-        return value.isBlank() ? FALLBACK_SECRET : value;
-    }
 
     private String enc(String value) {
         return URLEncoder.encode(value, StandardCharsets.UTF_8);
