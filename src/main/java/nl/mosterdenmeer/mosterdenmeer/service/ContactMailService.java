@@ -26,12 +26,12 @@ public class ContactMailService {
 
     public void sendContactMail(String name, String email, String subject, String message) throws MessagingException {
         // Get properties from system or use defaults
-        String smtpHost = "ns1.hoekschlyceum-server.nl";
+        String smtpHost = getSystemPropertyOrDefault("SMTP_HOST", "ns1.hoekschlyceum-server.nl");
         String smtpPort = getSystemPropertyOrDefault("SMTP_PORT", "587");
         String smtpUser = "info@mosterdenmeer.nl";
-        String smtpPassword = "NfzHg7m67jWmSPJgffdq";
+        String smtpPassword = getRequiredSystemProperty("SMTP_PASSWORD");
         String mailTo = "info@mosterdenmeer.nl";
-        String mailCc = "phillipbraas@gmail.com";
+        String mailCc = getSystemPropertyOrDefault("MAIL_CC", "phillipbraas@gmail.com");
 
         Properties properties = new Properties();
         properties.put("mail.smtp.host", smtpHost);

@@ -15,18 +15,15 @@ import java.util.logging.Logger;
 public class TurnstileService {
 
     private static final String VERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
-    private static final boolean USE_JVM_OPTIONS = false;
+    private static final String SITE_KEY_PROPERTY = "TURNSTILE_SITE_KEY";
+    private static final String SECRET_PROPERTY = "TURNSTILE_SECRET";
     private static final Logger LOGGER = Logger.getLogger(TurnstileService.class.getName());
-
-    // Temporary test keys from Cloudflare docs. Safe for local troubleshooting only.
-    // Set USE_JVM_OPTIONS=true once production JVM options are correct.
-    private static final String FALLBACK_SITE_KEY = "0x4AAAAAACvw5w5T0bTLMMux";
-    private static final String FALLBACK_SECRET   = "0x4AAAAAACvw5yp9szh8d4oSbeLG5UC8X1A";
 
     private final HttpClient httpClient = HttpClient.newHttpClient();
 
     public String getSiteKey() {
-        return FALLBACK_SITE_KEY;
+        String value = System.getProperty(SITE_KEY_PROPERTY);
+        return value == null ? "" : value.trim();
     }
 
 
@@ -68,8 +65,9 @@ public class TurnstileService {
     }
 
     private String getSecret() {
-            return FALLBACK_SECRET;
-        }
+        String value = System.getProperty(SECRET_PROPERTY);
+        return value == null ? "" : value.trim();
+    }
 
     private String enc(String value) {
         return URLEncoder.encode(value, StandardCharsets.UTF_8);

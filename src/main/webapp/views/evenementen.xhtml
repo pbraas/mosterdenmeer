@@ -55,13 +55,13 @@
                 align-items: center;
                 gap: 10px;
             }
-            .event-address a {
+            .event-address a, .event-address-link {
                 color: #555;
                 font-style: italic;
                 text-decoration: none;
                 transition: color 0.3s;
             }
-            .event-address a:hover {
+            .event-address a:hover, .event-address-link:hover {
                 color: #91a63d;
                 text-decoration: underline;
             }
@@ -88,11 +88,28 @@
                 margin-top: auto;
                 text-align: center;
             }
+            .event-grid .ui-datagrid-column {
+                display: flex;
+                align-items: stretch;
+            }
+            .event-grid .ui-datagrid-column > .ui-card {
+                width: 100%;
+            }
+            @media (max-width: 992px) {
+                .event-grid .ui-datagrid-column {
+                    width: 50% !important;
+                }
+            }
+            @media (max-width: 600px) {
+                .event-grid .ui-datagrid-column {
+                    width: 100% !important;
+                }
+            }
         </style>
 
         <h1 style="text-align: center; color: #91a63d; margin-bottom: 30px;">Evenementen</h1>
 
-        <p:dataGrid var="event" value="#{evenementenBean.events}" columns="1" layout="grid"
+        <p:dataGrid var="event" value="#{evenementenBean.events}" columns="3" layout="grid"
                     styleClass="event-grid"
                     paginator="false" rows="10">
 
@@ -118,9 +135,14 @@
 
                 <div class="event-address" rendered="#{not empty event.address}">
                     <i class="pi pi-map-marker" style="color: #91a63d; font-size: 1.2rem;"></i>
-                    <a href="https://www.google.com/maps/search/?api=1&amp;query=#{event.address}" target="_blank">
-                        #{event.address}
-                    </a>
+                    <h:outputLink value="https://www.google.com/maps/search/?api=1&amp;query=#{event.address}"
+                                  target="_blank" styleClass="event-address-link"
+                                  rendered="#{event.address != 'online'}">
+                        <h:outputText value="#{event.address}" />
+                    </h:outputLink>
+                    <h:outputText value="#{event.address}"
+                                  style="color: #555; font-style: italic;"
+                                  rendered="#{event.address == 'online'}" />
                 </div>
 
                 <div class="event-footer">
