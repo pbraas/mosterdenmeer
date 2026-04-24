@@ -20,6 +20,15 @@ public class EvenementenBean {
         events = new ArrayList<>();
 
         events.add(new Event(
+                "krimpenerwaard.png",
+                "Oogst- en Streekmarkt, 23 mei 2026",
+                "Proef de Krimpenerwaard",
+                Arrays.asList("Lokale streekproducten", "Ambachtelijke markt", "Gratis toegang"),
+                "Streekmuseum Krimpenerwaard, IJsseldijk 312, 2922BM Krimpen a/d IJssel",
+                "https://www.indekrimpenerwaard.nl/proef-de-krimpenerwaard/proef-krimpen"
+        ));
+
+        events.add(new Event(
                 "natuurlijkhw.png",
                 "Kookvideo's Lokaal Proeven",
                 "Kijk vooral naar aflevering 6. Lokaal proeven met Mosterd en Meer.",
@@ -66,6 +75,8 @@ public class EvenementenBean {
 
     }
 
-    public List<Event> getEvents() { return events; }
+    public List<Event> getEvents() {
+        return events;
+    }
 }
 
