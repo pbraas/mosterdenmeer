@@ -4,7 +4,6 @@
                 template="/templates/homepage.xhtml"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
-                xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
 
     <ui:define name="content">
@@ -36,6 +35,73 @@
                 height: auto;
                 object-fit: contain;
                 border-radius: 8px;
+            }
+            .event-logo-link {
+                display: inline-block;
+                border-radius: 8px;
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+                cursor: zoom-in;
+            }
+            .event-logo-link:hover,
+            .event-logo-link:focus-visible {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            }
+            .event-logo-link:focus-visible {
+                outline: 2px solid #91a63d;
+                outline-offset: 4px;
+            }
+            .event-logo-modal {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,0.82);
+                z-index: 2000;
+                padding: 20px;
+                align-items: center;
+                justify-content: center;
+            }
+            .event-logo-modal.is-open {
+                display: flex;
+            }
+            .event-logo-modal-content {
+                position: relative;
+                max-width: min(90vw, 900px);
+                max-height: 90vh;
+                text-align: center;
+            }
+            .event-logo-modal-image {
+                display: block;
+                max-width: 100%;
+                max-height: calc(90vh - 60px);
+                border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+                background: #fff;
+            }
+            .event-logo-modal-title {
+                color: #fff;
+                font-size: 1rem;
+                margin-top: 12px;
+            }
+            .event-logo-modal-close {
+                position: absolute;
+                top: -14px;
+                right: -14px;
+                width: 40px;
+                height: 40px;
+                border: none;
+                border-radius: 50%;
+                background: #fff;
+                color: #333;
+                font-size: 1.5rem;
+                line-height: 1;
+                cursor: pointer;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            }
+            .event-logo-modal-close:hover,
+            .event-logo-modal-close:focus-visible {
+                background: #91a63d;
+                color: #fff;
             }
             .event-title {
                 font-size: 1.4rem;
@@ -115,8 +181,16 @@
 
             <p:card styleClass="event-card">
                 <div class="event-logo-container">
-                    <h:graphicImage library="images" name="logos/#{event.logo}" styleClass="event-logo" alt="#{event.title}"
-                                    rendered="#{not empty event.logo}" />
+                    <ui:fragment rendered="#{not empty event.logo}">
+                        <a href="#{resource[event.logoResource]}"
+                           class="event-logo-link"
+                           title="Vergroot logo van #{event.title}"
+                           data-image="#{resource[event.logoResource]}"
+                           data-title="#{event.title}"
+                           onclick="openEventLogoModal(this); return false;">
+                            <h:graphicImage library="images" name="logos/#{event.logo}" styleClass="event-logo" alt="#{event.title}" />
+                        </a>
+                    </ui:fragment>
                 </div>
 
                 <div class="event-title">
@@ -133,17 +207,19 @@
                     </ui:repeat>
                 </ul>
 
-                <div class="event-address" rendered="#{not empty event.address}">
-                    <i class="pi pi-map-marker" style="color: #91a63d; font-size: 1.2rem;"></i>
-                    <h:outputLink value="https://www.google.com/maps/search/?api=1&amp;query=#{event.address}"
-                                  target="_blank" styleClass="event-address-link"
-                                  rendered="#{event.address != 'online'}">
-                        <h:outputText value="#{event.address}" />
-                    </h:outputLink>
-                    <h:outputText value="#{event.address}"
-                                  style="color: #555; font-style: italic;"
-                                  rendered="#{event.address == 'online'}" />
-                </div>
+                <ui:fragment rendered="#{not empty event.address}">
+                    <div class="event-address">
+                        <i class="pi pi-map-marker" style="color: #91a63d; font-size: 1.2rem;"></i>
+                        <h:outputLink value="https://www.google.com/maps/search/?api=1&amp;query=#{event.address}"
+                                      target="_blank" styleClass="event-address-link"
+                                      rendered="#{event.address != 'online'}">
+                            <h:outputText value="#{event.address}" />
+                        </h:outputLink>
+                        <h:outputText value="#{event.address}"
+                                      style="color: #555; font-style: italic;"
+                                      rendered="#{event.address == 'online'}" />
+                    </div>
+                </ui:fragment>
 
                 <div class="event-footer">
                     <p:button value="Meer info" href="#{event.url}" target="_blank"
@@ -153,6 +229,51 @@
             </p:card>
 
         </p:dataGrid>
+
+        <div id="eventLogoModal" class="event-logo-modal" onclick="closeEventLogoModal()" aria-hidden="true">
+            <div class="event-logo-modal-content" onclick="event.stopPropagation()">
+                <button type="button" class="event-logo-modal-close" onclick="closeEventLogoModal()"
+                        aria-label="Sluit logo voorbeeld">×</button>
+                <img id="eventLogoModalImage" class="event-logo-modal-image" src="" alt="" />
+                <div id="eventLogoModalTitle" class="event-logo-modal-title"></div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            //<![CDATA[
+            function openEventLogoModal(trigger) {
+                var modal = document.getElementById('eventLogoModal');
+                var modalImage = document.getElementById('eventLogoModalImage');
+                var modalTitle = document.getElementById('eventLogoModalTitle');
+                var imageUrl = trigger.getAttribute('data-image');
+                var title = trigger.getAttribute('data-title') || '';
+
+                modalImage.setAttribute('src', imageUrl);
+                modalImage.setAttribute('alt', title);
+                modalTitle.textContent = title;
+                modal.classList.add('is-open');
+                modal.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeEventLogoModal() {
+                var modal = document.getElementById('eventLogoModal');
+                var modalImage = document.getElementById('eventLogoModalImage');
+
+                modal.classList.remove('is-open');
+                modal.setAttribute('aria-hidden', 'true');
+                modalImage.setAttribute('src', '');
+                modalImage.setAttribute('alt', '');
+                document.body.style.overflow = '';
+            }
+
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    closeEventLogoModal();
+                }
+            });
+            //]]>
+        </script>
     </ui:define>
 
 </ui:composition>

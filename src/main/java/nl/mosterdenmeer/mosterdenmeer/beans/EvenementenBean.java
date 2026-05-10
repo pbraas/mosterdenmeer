@@ -20,6 +20,15 @@ public class EvenementenBean {
         events = new ArrayList<>();
 
         events.add(new Event(
+                "lentemarkt.png",
+                "Lentemarkt, 6 juni 2026",
+                "Proef de Krimpenerwaard",
+                Arrays.asList("Kindermarkt", "Leuke activiteiten", "Lokale markt"),
+                "Jasmijnstraat 6, Oud-Beijerland",
+                "https://www.leeuwenhartschool.nl/evenement/lentemarkt-4/"
+        ));
+
+        events.add(new Event(
                 "krimpenerwaard.png",
                 "Oogst- en Streekmarkt, 23 mei 2026",
                 "Proef de Krimpenerwaard",

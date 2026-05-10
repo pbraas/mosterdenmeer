@@ -23,6 +23,10 @@ public class Event {
     public String getLogo() { return logo; }
     public void setLogo(String logo) { this.logo = logo; }
 
+    public String getLogoResource() {
+        return logo == null || logo.isBlank() ? null : "images:logos/" + logo;
+    }
+
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
 
